@@ -3,11 +3,9 @@ const express = require('express');
 const { store } = require('./temp_store/store')
 
 const application = express();
-const port = 4002;
+const port = process.env.PORT || 4002;
 
 //middlewares
-
-
 application.use(express.json());
 
 //methods
