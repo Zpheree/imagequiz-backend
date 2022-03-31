@@ -10,7 +10,7 @@ application.use(express.json());
 
 //methods
 application.get('/', (request, response) => {
-    response.status(200).json({done: true, message: 'Fine!'});
+    response.status(200).json({done: true, message: 'Welcome to imagequiz backend API!'});
 });
 
 application.post('/register', (request, response) => {
