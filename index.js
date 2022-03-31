@@ -1,3 +1,4 @@
+//dependencies
 const express = require('express');
 const { store } = require('./temp_store/store')
 
@@ -6,8 +7,10 @@ const port = 4002;
 
 //middlewares
 
+
 application.use(express.json());
 
+//methods
 application.get('/', (request, response) => {
     response.status(200).json({done: true, message: 'Fine!'});
 });
