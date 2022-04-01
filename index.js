@@ -79,7 +79,7 @@ application.get("/scores/:quiztaker/:quizname", (request, response) => {
 
     if (result.done) {
       response.status(200).json(
-        {done: true, result: result.ret, message: result.message});
+        {done: true, result: result.new_array, message: result.message});
     } else {
       response.status(404).json(
         {done: false, result: undefined, message: result.message});
