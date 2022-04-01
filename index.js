@@ -45,12 +45,12 @@ application.post('/login', (request, response) => {
 
 application.get('/quiz/:id', (request, response) => {
     let id = request.params.id;
-
     let result = store.getQuiz(id);
+
     if (result.done) {
-        response.status(200).json({done: true, result: result.quiz});
+        response.status(200).json({done: true, result: result.quiz, message: "A quiz with this name was found"});
     } else {
-        response.status(404).json({done: false, message: result.message});
+        response.status(404).json({done: false, result: undefined, message: result.message});
     }
 });
 
@@ -65,13 +65,8 @@ application.post('/score', (request, response) => {
     let quizName = request.body.quizName;
     let score = request.body.score;
 
-    let result = store.storeQuiz(quizTaker, quizName, score);
-    
-    if (result.valid) {
-        response.status(200).json({done: true, message: "Quiz successfully saved!"});
-    } else {
-        response.status(404).json({done: false, message: "Quiz saved unsuccessfully!"});
-    }
+    store.storeQuiz(quizTaker, quizName, score);
+    response.status(200).json({done: true, message: "Quiz successfully saved!"});
 });
 
 application.get("/scores/:quiztaker/:quizname", (request, response) => {
