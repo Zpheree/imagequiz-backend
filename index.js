@@ -1,6 +1,10 @@
 //dependencies
 const express = require('express');
-const { store } = require('./temp_store/store')
+const { store } = require('./temp_store/store');
+const { flowers } = require('./temp_store/flowers');
+const { scores } = require('./temp_store/scores');
+const { request } = require('express');
+const { response } = require('express');
 
 const application = express();
 const port = process.env.PORT || 4002;
@@ -18,8 +22,13 @@ application.post('/register', (request, response) => {
     let email = request.body.email;
     let password = request.body.password;
 
-    store.addCustomer(name, email, password);
-    response.status(200).json({done: true, message: 'The customer has been added successfully!'});
+    let result = store.addCustomer(name, email, password);
+
+    if (result.valid) {
+        response.status(200).json({done: true, message: 'The customer has been added successfully!'});
+    } else {
+        response.status(409).json({done: false, message: 'This customer already exists!'})
+    }  
 });
 
 application.post('/login', (request, response) => {
@@ -41,10 +50,44 @@ application.get('/quiz/:id', (request, response) => {
     if (result.done) {
         response.status(200).json({done: true, result: result.quiz});
     } else {
-        response.status(404).json({done: false, message: result.message})
+        response.status(404).json({done: false, message: result.message});
     }
 });
 
+application.get("/flowers", (request, response) => {
+    let result = store.getFlowers();
+    response.status(200).json(
+      {done: true, result: result.flowers, message: result.message});
+});
+
+application.post('/score', (request, response) => {
+    let quizTaker = request.body.quizTaker;
+    let quizName = request.body.quizName;
+    let score = request.body.score;
+
+    let result = store.storeQuiz(quizTaker, quizName, score);
+    
+    if (result.valid) {
+        response.status(200).json({done: true, message: "Quiz successfully saved!"});
+    } else {
+        response.status(404).json({done: false, message: "Quiz saved unsuccessfully!"});
+    }
+});
+
+application.get("/scores/:quiztaker/:quizname", (request, response) => {
+    let quizTaker = request.params.quiztaker;
+    let quizName = request.params.quizname;
+
+    let result = store.getScores(quizTaker, quizName);
+
+    if (result.done) {
+      response.status(200).json(
+        {done: true, result: result.ret, message: result.message});
+    } else {
+      response.status(404).json(
+        {done: false, result: undefined, message: result.message});
+    }
+});
 
 application.listen(port, () => {
     console.log(`Listening to port ${port}`)

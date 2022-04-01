@@ -1,3 +1,3 @@
 let scores = [];
 
-exports.scores = scores;
+module.exports = { scores };
