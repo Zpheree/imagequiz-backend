@@ -47,20 +47,20 @@ let store = {
     },
 
     storeQuiz: (quizTaker, quizName, quizScore) => {
-        scores.push({ quizTaker: quizTaker, quizName: quizName, score: score });
+        scores.push({ quizTaker: quizTaker, quizName: quizName, score: quizScore });
     },
 
-    getScore: (quizTaker, quizName) => {
-        let new_array = []
+    getScores: (quizTaker, quizName) => {
+        let ret = []
 
         for (i = 0; i < scores.length; i++) {
             if (scores[i].quizTaker === quizTaker & scores[i].quizName === quizName) {
-                new_array.push(scores[i]);
+                ret.push(scores[i]);
             }
         }
 
-        if (new_array.length > 0) {
-            return { done: true, new_array, message: "All scores of quiz found for quiz taker!" };
+        if (ret.length > 0) {
+            return { done: true, ret, message: "All scores of quiz found for quiz taker!" };
         } else {
             return { done: false, message: "No quiz with this name found!" }
         }
