@@ -5,12 +5,14 @@ const { flowers } = require('./temp_store/flowers');
 const { scores } = require('./temp_store/scores');
 const { request } = require('express');
 const { response } = require('express');
+const cors = require('cors')
 
 const application = express();
 const port = process.env.PORT || 4002;
 
 //middlewares
 application.use(express.json());
+application.use(cors());
 
 //methods
 application.get('/', (request, response) => {
