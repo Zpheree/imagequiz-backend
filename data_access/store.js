@@ -70,9 +70,14 @@ let store = {
     },
 
     getFlowers: () => {
-        return pool.query('insert into imagequiz.flowers (name, picture) values ($1, $2)', [flowers[0][0], picture[0][0]])
-        // return { done: true, flowers, message: "Got all flowers" };
-    },
+        return pool.query(`select * from imagequiz.flowers`)
+        .then(x => {
+          let quiz = x.rows.map(y => {
+            return {name: y.name, picture: y.picture}
+          })
+          return quiz;
+        });
+      },
 
     storeQuiz: (quizTaker, quizName, quizScore) => {
         scores.push({ quizTaker: quizTaker, quizName: quizName, score: quizScore });
