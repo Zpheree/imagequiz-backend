@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Pool } = require("pg");
+const { customers } = require("../temp_store/customers");
 require("dotenv").config();
 
 const connectionString =
