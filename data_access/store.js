@@ -1,7 +1,6 @@
-const bcrypt = require("bcrypt");
-const { Pool } = require("pg");
-const { customers } = require("../temp_store/customers");
-require("dotenv").config();
+const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
+require('dotenv').config();
 
 const connectionString =
     `postgres://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
@@ -16,7 +15,7 @@ const pool = new Pool(conection);
 let store = {
 
     check: () => {
-        return pool.query(`select * from imagequiz.flowers`)
+        return pool.query(`select * from imagequiz.flower`)
     },
 
     addCustomer: (name, email, password) => {
@@ -42,7 +41,7 @@ let store = {
     },
 
     getFlowers: () => {
-        return pool.query(`select * from imagequiz.flowers`)
+        return pool.query(`select * from imagequiz.flower`)
             .then(x => {
                 let quiz = x.rows.map(y => {
                     return { name: y.name, picture: y.picture }

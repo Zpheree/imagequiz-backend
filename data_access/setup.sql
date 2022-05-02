@@ -1,4 +1,4 @@
-create schema if not exists imagequiz;
+CREATE SCHEMA IF NOT EXISTS imagequiz;
 
 drop table if exists imagequiz.score;
 drop table if exists imagequiz.customer;
@@ -6,7 +6,9 @@ drop table if exists imagequiz.quiz_question;
 drop table if exists imagequiz.question;
 drop table if exists imagequiz.quiz;
 drop table if exists imagequiz.category;
-drop table if exists imagequiz.flowers;
+drop table if exists imagequiz.flower;
+
+
 
 create table imagequiz.customer
 (
@@ -43,7 +45,7 @@ create table imagequiz.quiz_question
 	question_id int references imagequiz.question(id)
 );
 
-create table imagequiz.flowers
+create table imagequiz.flower
 (
 	qid bigserial primary key,
 	name varchar(100) not null,
@@ -56,5 +58,5 @@ create table imagequiz.score
 	quiz_id int references imagequiz.quiz(id),
 	customer_id int references imagequiz.customer(id),
 	score float8 not null,
-	date timestamp not null
-);
+	date timestamp not null    
+ );

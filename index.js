@@ -1,8 +1,12 @@
-const express = require("express");
-let { store } = require("./data_access/store");
+const express = require('express');
+const { store } = require('./data_access/store');
+const { flowers } = require('./temp_store/flowers');
+const { scores } = require('./temp_store/scores');
+const { request } = require('express');
+const { response } = require('express');
+const cors = require('cors')
 
 const app = express();
-const cors = require("cors");
 const port = process.env.PORT || 4002;
 
 const passport = require("passport");
