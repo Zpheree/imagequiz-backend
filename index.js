@@ -6,7 +6,7 @@ const { scores } = require('./temp_store/scores');
 const { request } = require('express');
 const { response } = require('express');
 const cors = require('cors')
-require(dotenv).config()
+require("dotenv").config()
 
 const app = express();
 const port = process.env.PORT || 4002;
