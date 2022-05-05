@@ -55,7 +55,7 @@ passport.use(new LocalStrategy({ usernameField: "email"}, function verify(userna
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${backendUrl}/auth/google/callback`,
+    callbackURL: `${backend}/auth/google/callback`,
     passReqToCallback   : true
   },
   function (request, accessToken, refreshToken, profile, done) {
