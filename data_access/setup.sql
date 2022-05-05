@@ -1,3 +1,4 @@
+
 CREATE SCHEMA IF NOT EXISTS imagequiz;
 
 drop table if exists imagequiz.score;
