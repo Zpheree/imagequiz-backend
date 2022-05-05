@@ -63,3 +63,7 @@ create table imagequiz.score
    date timestamp not null 
 );
 
+
+
+
+
