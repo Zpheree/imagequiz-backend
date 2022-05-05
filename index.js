@@ -1,15 +1,11 @@
 //pushing changes made by Professor Hamidreza
 const express = require('express');
 const { store } = require('./data_access/store');
-const { flowers } = require('./temp_store/flowers');
-const { scores } = require('./temp_store/scores');
-const { request } = require('express');
-const { response } = require('express');
-const cors = require('cors')
-require("dotenv").config()
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 4002;
+const cors = require('cors')
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
