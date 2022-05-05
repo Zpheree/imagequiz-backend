@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 require('dotenv').config();
-const { flowers } = require('../temp_store/flowers');
 
 const connectionString =
     `postgres://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
@@ -15,14 +14,34 @@ const pool = new Pool(conection);
 
 let store = {
 
-    check: () => {
-        return pool.query(`select * from imagequiz.flower`)
-    },
-
     addCustomer: (name, email, password) => {
         const hash = bcrypt.hashSync(password, 10);
         return pool.query(`insert into imagequiz.customer (name, email, password) values ($1, $2, $3)
                            on conflict (email) do nothing returning id;`, [name, email, hash]);
+    },
+
+    findNonLocalCustomer: (email, provider) => {
+        return pool.query('select * from imagequiz.customer where local = $1 and email = $2 and provider = $3', ['f', email, provider])
+        .then(x => {
+            if(x.rows.length == 1) {
+             return { found: true, user: {id: x.rows[0].id, username: x.rows[0].email, name: x.rows[0].name} };
+            } else {
+                return {found: false};
+            }
+        })
+     },
+
+    findOrCreateNonLocalCustomer: async (name, email, password, provider) => {
+      console.log('in findOrCreateNonLocalCustomer');
+      console.log(name, email, password, provider);
+      search = await store.findNonLocalCustomer(email, provider);
+      if(search.found) {
+          return search.user;
+      }
+      return pool.query('insert into imagequiz.customer (name, email, password, local, provider) values ($1 , $2, $3, $4, $5)', [name, email, password, 'f', provider])
+      .then(x => {
+        return { done: true, user: {id: name, username: email, name: name} };
+      });
     },
 
     login: (email, password) => {
