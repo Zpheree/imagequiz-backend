@@ -82,8 +82,8 @@ passport.deserializeUser(function(user, cb) {
 
 app.use(session({
     secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: new SQLiteStore({ db: 'sessions.db', dir: './sessions' })
 }));
 
