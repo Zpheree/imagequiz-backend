@@ -56,7 +56,7 @@ passport.use(new GoogleStrategy({
   },
   function (request, accessToken, refreshToken, profile, done) {
     console.log('in Google strategy:');
-    //console.log(profile);
+    console.log(`${clientID}`);
     store.findOrCreateNonLocalCustomer(profile.displayName, profile.email, profile.id, profile.provider)
       .then(x => done(null, x))
       .catch(e => {
