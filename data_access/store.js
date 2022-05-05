@@ -4,7 +4,7 @@ require('dotenv').config();
 const { flowers } = require('../temp_store/flowers');
 
 const connectionString =
-    `postgres://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
+    `postgres://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
 
 const conection = {
     connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL : connectionString,
@@ -42,7 +42,7 @@ let store = {
     },
 
     getFlowers: () => {
-        return pool.query(`select * from imagequiz.flower`)
+        return pool.query(`select * from imagequiz.flowers`)
             .then(x => {
                 let quiz = x.rows.map(y => {
                     return { name: y.name, picture: y.picture }

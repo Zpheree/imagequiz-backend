@@ -13,12 +13,13 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
+let origin =  "http://localhost:3000";//https://zpheree.github.io"
 
 //middlewares
 app.use(express.json());
 
 app.use(cors({
-  origin: "https://zpheree.github.io",
+  origin: origin,
   credentials: true
 }));
 
