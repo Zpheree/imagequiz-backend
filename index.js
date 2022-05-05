@@ -1,35 +1,34 @@
 //pushing changes made by Professor Hamidreza
 const express = require('express');
 const { store } = require('./data_access/store');
-require('dotenv').config();
+const { flowers } = require('./temp_store/flowers');
+const { scores } = require('./temp_store/scores');
+const { request } = require('express');
+const { response } = require('express');
+const cors = require('cors')
 
 const app = express();
 const port = process.env.PORT || 4002;
-const cors = require('cors')
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
-let backend = "https://zpheree-imagequiz-api.herokuapp.com"; //backend (heroku)
-let origin =  "https://zpheree.github.io"; //frontend (github)
+let origin =  "https://zpheree.github.io";
 
 //middlewares
 app.use(express.json());
 
 app.use(cors({
-  origin: origin,
+  origin: [origin, 'http://localhost:3000'],
   credentials: true
 }));
 
 app.use((request, response, next) => {
     console.log(`request url: ${request.url}`);
     console.log(`request method: ${request.method}`);
-    request.header('Access-Control-Allow-Origin', "https://zpheree.github.io");
-    request.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    request.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    request.header('Access-Control-Allow-Credentials', 'true');
+    request.header("Access-Control-Allow-Origin", "*");
+    request.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 })
 
@@ -48,22 +47,6 @@ passport.use(new LocalStrategy({ usernameField: "email"}, function verify(userna
     });
 }));
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${backend}/auth/google/callback`,
-    passReqToCallback   : true
-  },
-  function (request, accessToken, refreshToken, profile, done) {
-    console.log('in Google strategy:');
-    store.findOrCreateNonLocalCustomer(profile.displayName, profile.email, profile.id, profile.provider)
-      .then(x => done(null, x))
-      .catch(e => {
-        console.log(e);
-        return done('Something went wrong.');
-      });
-}));
-
 passport.serializeUser(function(user, cb) {
     process.nextTick(function() {
         cb(null, { id: user.id, username: user.username });
@@ -78,8 +61,8 @@ passport.deserializeUser(function(user, cb) {
 
 app.use(session({
     secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: new SQLiteStore({ db: 'sessions.db', dir: './sessions' })
 }));
 
@@ -89,7 +72,15 @@ app.use(passport.session());
 
 //methods
 app.get("/", (request, response) => {
-    response.status(200).json({done: true, message: "Welcome to imagequiz-backend API!"});
+    store.check()
+    .then ( x => {
+        console.log(x);
+        response.status(200).json({done: true, result:x.rows, message: "Welcome to imagequiz-backend API!"});
+    })
+    .catch(e => {
+      console.log(e);
+      response.status(500).json({done: false, message: "Something went wrong."});
+    });
 });
 
 
@@ -127,39 +118,6 @@ app.get("/login/success", (request, response) => {
 app.get("/login/failed", (request, response) => {
     response.status(401).json({done: false, result: "Credentials invalid!"});
 });
-
-app.get('/auth/google',
-  passport.authenticate('google', {
-    scope:
-      ['email', 'profile']
-  }
-));
-
-app.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: '/auth/google/success',
-    failureRedirect: '/auth/google/failure'
-  }));
-
-  app.get('/auth/google/success', (request, response) => {
-    console.log('/auth/google/success');
-    console.log(request.user);
-    response.redirect(`${origin}/#/google/${request.user.username}/${request.user.name}`);
-
-  });
-  app.get('/auth/google/failure', (request, response) => {
-    console.log('/auth/google/failure');
-    response.redirect(`${origin}/#/google/failed`);
-  });
-
-  app.get('/isloggedin', (request, response) => {
-    if(request.isAuthenticated()) {
-      response.status(200).json({ done: true, result: true });
-    } else {
-      response.status(410).json({ done: false, result: false });
-    }
-
-    });
 
 app.post('/logout', function(request, response) {
     request.logout();
