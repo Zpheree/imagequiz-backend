@@ -12,8 +12,8 @@ const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 
-let backend = "http://localhost:4002";
-let origin = "http://localhost:3000";
+let backend = "'https://zpheree-imagequiz-api.herokuapp.com';";
+let origin = "http://zpheree.github.io";
 
 //middlewares
 app.use(express.json());
