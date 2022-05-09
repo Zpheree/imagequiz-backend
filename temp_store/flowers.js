@@ -108,5 +108,5 @@ let flowers = [
         picture: "https://habahram.blob.core.windows.net/flowers/zinnia.jpg"
     }
 ];
-//plz
+
 module.exports = { flowers }

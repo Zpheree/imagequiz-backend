@@ -1,8 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 require('dotenv').config();
-const { flowers } = require('../temp_store/flowers');
-//plz
+
 const connectionString =
     `postgres://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
 
@@ -14,10 +13,6 @@ const conection = {
 const pool = new Pool(conection);
 
 let store = {
-
-    check: () => {
-        return pool.query(`select * from imagequiz.flower`)
-    },
 
     addCustomer: (name, email, password) => {
         const hash = bcrypt.hashSync(password, 10);

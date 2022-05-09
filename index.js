@@ -26,8 +26,10 @@ app.use(cors({
 app.use((request, response, next) => {
     console.log(`request url: ${request.url}`);
     console.log(`request method: ${request.method}`);
-    request.header("Access-Control-Allow-Origin", "*");
-    request.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    request.header('Access-Control-Allow-Origin', "https://oliscott21.github.io");
+    request.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    request.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    request.header('Access-Control-Allow-Credentials', 'true');
     next();
 })
 
@@ -87,18 +89,20 @@ app.use(passport.authenticate('session'));
 app.use(passport.session());
 
 //methods
+// app.get("/", (request, response) => {
+//     store.check()
+//         .then(x => {
+//             console.log(x);
+//             response.status(200).json({ done: true, message: "Welcome to imagequiz-backend API!" });
+//         })
+//         .catch(e => {
+//             console.log(e);
+//             response.status(500).json({ done: false, message: "Something went wrong." });
+//         });
+// });
 app.get("/", (request, response) => {
-    store.check()
-        .then(x => {
-            console.log(x);
-            response.status(200).json({ done: true, message: "Welcome to imagequiz-backend API!" });
-        })
-        .catch(e => {
-            console.log(e);
-            response.status(500).json({ done: false, message: "Something went wrong." });
-        });
+    response.status(200).json({done: true, message: "Welcome to imagequiz-backend API!"});
 });
-
 
 app.post("/register", (request, response) => {
     let name = request.body.name;

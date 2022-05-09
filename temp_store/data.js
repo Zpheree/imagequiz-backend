@@ -1,5 +1,5 @@
 const { flowers } = require('./flowers');
-//plz
+
 let generateQuestions = () => {
     let questions = [];
     let choiceIndex = 0;
