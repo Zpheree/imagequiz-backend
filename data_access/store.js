@@ -1,10 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 require('dotenv').config();
-<<<<<<< HEAD
-const { flowers } = require('../temp_store/flowers');
-=======
->>>>>>> 2d667b43453497de623fc7839d35c1298ab28592
 
 const connectionString =
     `postgres://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
@@ -63,10 +59,7 @@ let store = {
                 }
             });
     },
-<<<<<<< HEAD
-=======
-
->>>>>>> 2d667b43453497de623fc7839d35c1298ab28592
+    
     getFlowers: () => {
         return pool.query(`select * from imagequiz.flowers`)
             .then(x => {
