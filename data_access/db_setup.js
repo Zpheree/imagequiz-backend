@@ -3,6 +3,7 @@ const fs = require('fs');
 require('dotenv').config({path: '../.env'});
 const { quizzes } = require('../temp_store/data');
 const { flowers } = require('../temp_store/flowers');
+
 let create_db_structure_sql = fs.readFileSync('setup.sql').toString();
 
 const connectionString =

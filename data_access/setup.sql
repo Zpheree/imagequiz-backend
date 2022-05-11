@@ -1,4 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS imagequiz;
+REATE SCHEMA IF NOT EXISTS imagequiz;
 
 drop table if exists imagequiz.score;
 drop table if exists imagequiz.customer;
@@ -62,7 +62,6 @@ create table imagequiz.score
    score float8 not null,   
    date timestamp not null 
 );
-
 
 
 

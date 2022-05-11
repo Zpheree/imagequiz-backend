@@ -11,24 +11,22 @@ const LocalStrategy = require("passport-local");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
-let backendUrl = "'https://zpheree-imagequiz-api.herokuapp.com';";
-let frontEndUrl = "http://zpheree.github.io";
+let origin =  "https://zpheree.github.io";
+let backend = "https://zpheree-imagequiz-api.herokuapp.com"
 
 //middlewares
 app.use(express.json());
 
 app.use(cors({
-  origin: frontEndUrl,
+  origin: [origin, 'http://localhost:3000'],
   credentials: true
 }));
 
 app.use((request, response, next) => {
     console.log(`request url: ${request.url}`);
     console.log(`request method: ${request.method}`);
-    request.header('Access-Control-Allow-Origin', "http://zpheree.github.io");
-    request.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    request.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    request.header('Access-Control-Allow-Credentials', 'true');
+    request.header("Access-Control-Allow-Origin", "*");
+    request.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 })
 
@@ -50,7 +48,7 @@ passport.use(new LocalStrategy({ usernameField: "email"}, function verify(userna
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${backendUrl}/auth/google/callback`,
+    callbackURL: `${backend}/auth/google/callback`,
     passReqToCallback   : true
   },
   function (request, accessToken, refreshToken, profile, done) {
@@ -78,8 +76,8 @@ passport.deserializeUser(function(user, cb) {
 
 app.use(session({
     secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: new SQLiteStore({ db: 'sessions.db', dir: './sessions' })
 }));
 
@@ -89,7 +87,15 @@ app.use(passport.session());
 
 //methods
 app.get("/", (request, response) => {
-    response.status(200).json({done: true, message: "Welcome to imagequiz-backend API!"});
+    store.check()
+    .then ( x => {
+        console.log(x);
+        response.status(200).json({done: true, result:x.rows, message: "Welcome to imagequiz-backend API!"});
+    })
+    .catch(e => {
+      console.log(e);
+      response.status(500).json({done: false, message: "Something went wrong."});
+    });
 });
 
 
@@ -105,7 +111,8 @@ app.post("/register", (request, response) => {
           } else {
               response.status(403).json({done: false, result: "Customer already exists!"});
           }
-      })
+      }
+    )
     .catch(e => {
       console.log(e);
       response.status(500).json({done: false, message: "Something went wrong."});
@@ -143,12 +150,12 @@ app.get('/auth/google/callback',
   app.get('/auth/google/success', (request, response) => {
     console.log('/auth/google/success');
     console.log(request.user);
-    response.redirect(`${frontEndUrl}/#/google/${request.user.username}/${request.user.name}`);
+    response.redirect(`${origin}/#/google/${request.user.username}/${request.user.name}`);
 
   });
   app.get('/auth/google/failure', (request, response) => {
     console.log('/auth/google/failure');
-    response.redirect(`${frontEndUrl}/#/google/failed`);
+    response.redirect(`${origin}/#/google/failed`);
   });
 
   app.get('/isloggedin', (request, response) => {

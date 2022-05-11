@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 require('dotenv').config();
+const { flowers } = require('../temp_store/flowers');
 
 const connectionString =
     `postgres://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
@@ -59,7 +60,6 @@ let store = {
                 }
             });
     },
-    
     getFlowers: () => {
         return pool.query(`select * from imagequiz.flowers`)
             .then(x => {
