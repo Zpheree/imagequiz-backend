@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 2d667b43453497de623fc7839d35c1298ab28592
 CREATE SCHEMA IF NOT EXISTS imagequiz;
 
 drop table if exists imagequiz.score;
